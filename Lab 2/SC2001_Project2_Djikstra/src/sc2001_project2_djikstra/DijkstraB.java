@@ -16,7 +16,7 @@ public class DijkstraB {
 		ArrayList<Integer> pQueue = new ArrayList<Integer>();
 		int u;
 		
-		for (int i = 0; i < numVertices; i++) {
+		for (int i = 0; i < numVertices; i++) { //V times
 			d[i] = INF;
 			pi[i] = -1;
 			set_S[i] = false;
@@ -26,25 +26,24 @@ public class DijkstraB {
 		pi[source] = source;
 		
 		pQueue.add(source);
-		for (int i=0; i<numVertices; i++) {
+		for (int i=0; i<numVertices; i++) { //V times
 			if (i!=source) {
 				pQueue.add(i);
 			}
 		}
 		
-		minHeap H = new minHeap();
-		while (pQueue.isEmpty() == false) {
-			u = H.getMin(d, pQueue);
-			pQueue.remove(pQueue.indexOf(u));
+		minHeap H = new minHeap(d, pQueue);
+		while (pQueue.isEmpty() == false) { 
+			u = H.extractMin(); // VlgV since extractMin is done V times
 			set_S[u] = true;
 			
-			for (int i = 0; i<graph.getListSize(u); i++) {
+			for (int i = 0; i<graph.getListSize(u); i++) { // ElgV since DecreaseKey is done E times
 				int v = graph.getAdjVertex(u, i);
-				if (set_S[v] == false && d[v] > (d[u] + graph.getWeight(u, v))) {
-					//pQueue.remove(pQueue.indexOf(v));
+				if (set_S[v] == false && d[v] > (d[u] + graph.getWeight(u, v))) { 
+					pQueue.remove(pQueue.indexOf(v));
 					d[v] = d[u] + graph.getWeight(u, v);
 					pi[v] = u;
-					//pQueue.add(v);
+					H.insertKey(v);
 				}
 			}
 		}
@@ -64,7 +63,9 @@ public class DijkstraB {
 	
 	public static void main(String[] args) {
 		Graph_AdjList graph = Graph_AdjList.generateRandomGraph(10, 50, 10);
-		/* Test case from DijkstraA
+		
+		// Test case from DijkstraA
+		/*
 		Graph_AdjList graph = new Graph_AdjList(10);
 		graph.addEdge(0, 2, 1);
 		graph.addEdge(0, 5, 7);
@@ -115,8 +116,8 @@ public class DijkstraB {
 		graph.addEdge(9, 2, 9);
 		graph.addEdge(9, 4, 6);
 		graph.addEdge(9, 6, 5);
-		graph.addEdge(9, 7, 1);
-		*/
+		graph.addEdge(9, 7, 1); */
+		
 		graph.printGraph();
 		DijkstraB dijB = new DijkstraB();
 		dijB.dijkstra(graph, 0);

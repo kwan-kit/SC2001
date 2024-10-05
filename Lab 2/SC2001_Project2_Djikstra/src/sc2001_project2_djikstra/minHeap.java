@@ -3,18 +3,15 @@ package sc2001_project2_djikstra;
 import java.util.ArrayList;
 
 public class minHeap {
-	private ArrayList<Integer> heap = new ArrayList<Integer>();
+	private ArrayList<Integer> heap;
 	private int size;
 	private int[] d;
 	
-	public minHeap() {
-		
-	}
-	
-	public void makeHeap(ArrayList<Integer> pQueue) {
-		for (int i : pQueue)
-			heap.add(i);
+	public minHeap(int[] d, ArrayList<Integer> pQueue) {
+		this.d = d;
+		this.heap = pQueue;
 		this.size = pQueue.size();
+		heapify(0);
 	}
 	
 	public void fixHeap(int index, int key) {
@@ -57,12 +54,19 @@ public class minHeap {
 		}
 	}
 	
-	public int getMin(int[] d, ArrayList<Integer> pQueue) {
-		this.heap.clear();
-		this.d = d;
-		makeHeap(pQueue);
-		heapify(0);
-		return heap.get(0);
+	public int extractMin() {
+		int min = heap.get(0);
+		heap.set(0, heap.get(heap.size()-1));
+		heap.remove(heap.size()-1);
+		size--;
+		if (size!=0)
+			fixHeap(0, heap.get(0));
+		return min;
+	}
+	
+	public void insertKey(int key) {
+		heap.add(0, key);
+		fixHeap(0, key);
 	}
 
 }
