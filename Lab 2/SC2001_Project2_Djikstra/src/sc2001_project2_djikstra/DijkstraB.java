@@ -7,11 +7,13 @@ public class DijkstraB {
 	int numVertices;
 	int d[];
 	int pi[];
+	int keyComp = 0;
 
 	public void dijkstra(Graph_AdjList graph, int source) {
 		this.numVertices = graph.getNumVertices();
 		int d[] = new int[numVertices];
 		int pi[] = new int[numVertices];
+		this.keyComp=0;
 		boolean set_S[] = new boolean[numVertices];
 		ArrayList<Integer> pQueue = new ArrayList<Integer>();
 		int u;
@@ -20,6 +22,7 @@ public class DijkstraB {
 			d[i] = INF;
 			pi[i] = -1;
 			set_S[i] = false;
+			keyComp++;
 		}
 		
 		d[source] = 0;
@@ -30,15 +33,17 @@ public class DijkstraB {
 			if (i!=source) {
 				pQueue.add(i);
 			}
+			keyComp++;
 		}
 		
-		minHeap H = new minHeap(d, pQueue);
+		minHeap H = new minHeap(d, pQueue); // O(n)
 		while (pQueue.isEmpty() == false) { 
-			u = H.extractMin(); // VlgV since extractMin is done V times
+			u = H.extractMin(); // O(VlgV) since extractMin is done V times
 			set_S[u] = true;
 			
-			for (int i = 0; i<graph.getListSize(u); i++) { // ElgV since DecreaseKey is done E times
+			for (int i = 0; i<graph.getListSize(u); i++) { // O(ElgV) since DecreaseKey is done E times
 				int v = graph.getAdjVertex(u, i);
+				keyComp++;
 				if (set_S[v] == false && d[v] > (d[u] + graph.getWeight(u, v))) { 
 					pQueue.remove(pQueue.indexOf(v));
 					d[v] = d[u] + graph.getWeight(u, v);
@@ -50,6 +55,7 @@ public class DijkstraB {
 		
 		this.d = d;
 		this.pi = pi;
+		keyComp += H.extractKeyComp();
 	}
 	
 	public void printSolution( ) {
@@ -57,72 +63,97 @@ public class DijkstraB {
 		for (int i=0; i<numVertices; i++) {
 			System.out.println(i+" \t\t "+ d[i]+" \t\t\t\t "+pi[i]);
 		}
+		
+		System.out.println("Number of Key Comparisons: " + keyComp);
+	}
+	
+	public int getKeyComp() {
+		return keyComp;
 	}
 	
 	
-	
 	public static void main(String[] args) {
-		Graph_AdjList graph = Graph_AdjList.generateRandomGraph(10, 50, 10);
+		// generateRandomGraph(Vertices, Edges, MaxWeight)
+		Graph_AdjList graph = Graph_AdjList.generateRandomGraph(100, 9900, 9900);
 		
 		// Test case from DijkstraA
 		/*
-		Graph_AdjList graph = new Graph_AdjList(10);
-		graph.addEdge(0, 2, 1);
-		graph.addEdge(0, 5, 7);
-		graph.addEdge(0, 6, 8);
-		graph.addEdge(0, 7, 9);
-		graph.addEdge(0, 8, 8);
-		graph.addEdge(1, 0, 4);
-		graph.addEdge(1, 4, 4);
-		graph.addEdge(1, 5, 5);
-		graph.addEdge(1, 8, 5);
-		graph.addEdge(1, 9, 9);
-		graph.addEdge(2, 3, 3);
-		graph.addEdge(2, 4, 3);
-		graph.addEdge(2, 6, 7);
-		graph.addEdge(2, 7, 6);
-		graph.addEdge(2, 8, 3);
-		graph.addEdge(3, 2, 5);
-		graph.addEdge(3, 5, 7);
-		graph.addEdge(3, 6, 1);
-		graph.addEdge(3, 7, 4);
-		graph.addEdge(3, 9, 4);
-		graph.addEdge(4, 3, 1);
-		graph.addEdge(4, 6, 8);
-		graph.addEdge(4, 7, 2);
-		graph.addEdge(4, 8, 9);
-		graph.addEdge(4, 9, 2);
-		graph.addEdge(5, 0, 5);
-		graph.addEdge(5, 2, 1);
-		graph.addEdge(5, 6, 9);
-		graph.addEdge(5, 7, 3);
-		graph.addEdge(5, 8, 2);
-		graph.addEdge(6, 0, 8);
-		graph.addEdge(6, 1, 5);
-		graph.addEdge(6, 2, 1);
-		graph.addEdge(6, 8, 5);
-		graph.addEdge(6, 9, 6);
-		graph.addEdge(7, 1, 8);
-		graph.addEdge(7, 2, 7);
-		graph.addEdge(7, 3, 6);
-		graph.addEdge(7, 6, 6);
-		graph.addEdge(7, 9, 1);
-		graph.addEdge(8, 0, 1);
-		graph.addEdge(8, 1, 2);
-		graph.addEdge(8, 4, 8);
-		graph.addEdge(8, 5, 7);
-		graph.addEdge(8, 9, 2);
-		graph.addEdge(9, 0, 6);
-		graph.addEdge(9, 2, 9);
-		graph.addEdge(9, 4, 6);
-		graph.addEdge(9, 6, 5);
-		graph.addEdge(9, 7, 1); */
+		int matrixGraph[][]
+              = new int[][]	{{0,0,1,0,0,7,8,9,8,0},
+        					{4,0,0,0,4,0,5,0,5,9}, 
+        					{0,0,0,3,3,0,7,6,3,0}, 
+        					{0,5,0,0,0,7,1,4,0,4}, 
+        					{0,0,0,1,0,0,8,2,9,2}, 
+        					{5,0,1,0,0,0,9,3,2,0}, 
+        					{8,5,1,0,0,0,0,0,5,6},
+        					{0,8,7,6,0,0,6,0,0,1}, 
+        					{1,2,0,0,8,7,0,0,0,2}, 
+        					{6,0,9,0,6,0,5,1,0,0}};
+        					
+        Graph_AdjList graph = Graph_AdjList.matrixToList(graph);
+        */
 		
-		graph.printGraph();
+		/*
+		Graph_AdjList graph = new Graph_AdjList(10);
+		for (int i=0; i<10; i++) {
+			for (int j=0; j<10; j++) {
+				if (j==i+1)
+					graph.addEdge(i, j, 1);
+				else if (i!=j)
+					graph.addEdge(i, j, 50-(2*i));
+			}
+		}
+		*/
+		//Graph_AdjList graph = new Graph_AdjList(100); //V = 100;
+		
+		// Variables
+		int sampleSize = 90;
+		int stepSize = 100;
+		
+		int startE = 1000; 	//fixed V
+		int fixedV = 100;
+		
+		int startV = 1000; 	//fixed E
+		int fixedE = 20000;	//Also used as maxWeight
+		
 		DijkstraB dijB = new DijkstraB();
-		dijB.dijkstra(graph, 0);
+		String[][] data = new String[sampleSize][];
+		for (int i=startE; i<=(sampleSize-1)*stepSize; i+=stepSize) {
+			graph.reconstructGraph(i, i);
+			double startTime = System.nanoTime();
+			dijB.dijkstra(graph, 0);
+			double endTime = System.nanoTime();
+			double elapsedTime = (endTime - startTime) / 1000000; // Time in milliseconds
+			String[] result = {String.valueOf(fixedV), String.valueOf(i), String.valueOf(dijB.getKeyComp()), String.valueOf(elapsedTime)};
+			data[(i/100)-10] = result;
+		}
+		CSVList.writeDataAtOnce("AdjList_FixedV_Results.csv", data);
+		
+		data = new String[sampleSize][];
+		for (int i=startV; i<=(sampleSize-1)*stepSize; i+=stepSize) {
+			graph = Graph_AdjList.generateRandomGraph(i, fixedE, fixedE);
+			double startTime = System.nanoTime();
+			dijB.dijkstra(graph, 0);
+			double endTime = System.nanoTime();
+			double elapsedTime = (endTime - startTime) / 1000000; // Time in milliseconds
+			String[] result = {String.valueOf(i), String.valueOf(fixedE), String.valueOf(dijB.getKeyComp()), String.valueOf(elapsedTime)};
+			data[(i/100)-10] = result;
+		}
+		CSVList.writeDataAtOnce("AdjList_FixedE_Results.csv", data);
+		
+		/*
 		dijB.printSolution();
+		*/
+		
+		/*
+		String[][] data = new String[2][3];
+		String[] result = {"1", "2", String.valueOf(dijB.getKeyComp())};
+		data[0] = result;
+		data[1] = result;
+		CSV.writeDataAtOnce("test.csv", data);
+		*/
 		
 	}
 
 }
+
