@@ -1,4 +1,5 @@
 package sc2001_project2_djikstra;
+import java.io.PrintStream; 
 
 public class Graph_AdjMatrix {
 
@@ -9,6 +10,10 @@ public class Graph_AdjMatrix {
 	public Graph_AdjMatrix(int numVertices) {
 		this.numVertices = numVertices;
 		adjMatrix = new int[numVertices][numVertices];
+	}
+	
+	public void setAdjMatrix(int graph[][]) {
+		this.adjMatrix = graph;
 	}
 	
 	//connect 2 vertices with an edge
@@ -29,13 +34,24 @@ public class Graph_AdjMatrix {
 	}
 	
 	public void printGraph() {
-		System.out.println("Graph: Adjacency Matrix");
+		//System.out.println("Graph: Adjacency Matrix");
 		for (int i=0; i<numVertices; i++) {
 			for (int j=0; j<numVertices; j++) {
-				System.out.print(adjMatrix[i][j] + " ");
+				System.out.print(adjMatrix[i][j] + ",");
 			}
 			System.out.println();
 		}
+	}
+	
+	public void printGraphToFile(PrintStream file) {
+		//System.out.println("Printing to file...");
+		for (int i=0; i<numVertices; i++) {
+			for (int j=0; j<numVertices; j++) {
+				file.print(adjMatrix[i][j]+",");
+			}
+			file.print("\n");
+		}
+		//System.out.println("Done!");
 	}
 	
 }
