@@ -34,7 +34,6 @@ public class DijkstraA {
 			d[i] = Integer.MAX_VALUE;
 			pi[i] = -1;
 			set_S[i] = false;
-			keyComp++;
 		}
 		
         d[source] = 0;        // Distance of source vertex from itself is always 0
@@ -43,15 +42,19 @@ public class DijkstraA {
         
         for (int i = 1; i < NumOfVertices; i++) {   // Insert all other vertices into pQueue
         	insertSorted(i);
-        	keyComp++;
+        	
         }
         
         while(lenQueue != 0) {
         	int u = pQueue[0];                     // extract and delete vertex with the shortest distance from pQueue
+        	keyComp++;                             
+        	
         	deleteFirstElement(pQueue, lenQueue); 
         	set_S[u] = true;                       //add u to set S
         	
-        	for (int v=0; v<NumOfVertices; v++) {    
+        	for (int v=0; v<NumOfVertices; v++) {
+        		keyComp++;
+        		
         		if (!set_S[v] && graph[u][v]!=0      //v is not in set S, and is connected to u
             		&& d[u] != Integer.MAX_VALUE     //and distance of u is found
             		&& d[u] + graph[u][v] < d[v]) {    //and distance of u plus edge from u to v is less than current distance of v
@@ -62,7 +65,6 @@ public class DijkstraA {
 
         			insertSorted(v);                 //Insert v into pQueue in sorted order
         		}
-        		keyComp++;
         	}
         }
         
@@ -84,7 +86,7 @@ public class DijkstraA {
 		
 		for (int i=0; i<arr.length; i++) {
 			if(arr[i]==key) return i;
-			keyComp++;
+			//keyComp++;
 		} return -1;
 	}
 
@@ -103,7 +105,7 @@ public class DijkstraA {
 		int i;
 		for (i = pos; i < n-1; i++) {
 			arr[i] = arr[i + 1];
-			keyComp++;
+			//keyComp++;
 		}
 		lenQueue--;
 		
@@ -115,7 +117,7 @@ public class DijkstraA {
     {
         for (int i = 0; i < n - 1; i++) {
             arr[i] = arr[i + 1];
-            keyComp++;
+            //keyComp++;
         }
         lenQueue--;
     }
@@ -131,7 +133,7 @@ public class DijkstraA {
 		
 		for(i = lenQueue-1; (i>=0 && d[pQueue[i]]>d[vertex]); i--) {
 			pQueue[i+1] = pQueue[i];
-			keyComp++;
+			//keyComp++;
 		} 
 		
 		pQueue[i+1] = vertex;
@@ -142,7 +144,7 @@ public class DijkstraA {
 		return(lenQueue);
 	}
 	
-// TEST ---------------------------------------------------------------------------------------------------------------------------------//
+//---------------------------------------------------------------------------------------------------------------------------------//
     public static void main(String[] args)
     {
     	int sampleSize = 90;
@@ -158,8 +160,8 @@ public class DijkstraA {
     	DijkstraA t = new DijkstraA();
     	String[][] data = new String[sampleSize][];
     	
-    	
-    	for(int fileNum = 1; fileNum<=90; fileNum++) { //fixed v
+    	/*
+    	for(int fileNum = 2; fileNum<=90; fileNum++) { //fixed v
     		
     		System.out.println("file " + fileNum);
     		int graph[][] = new int[fixedV][fixedV];
@@ -204,8 +206,8 @@ public class DijkstraA {
     	} //end fixed v 
     	
     	CSVList.writeDataAtOnce("AdjMatrix_FixedV_Results.csv", data);
-    	
-    	/*	
+    	*/
+    		
 	for(int fileNum = 1; fileNum<=90; fileNum++) { //fixed e
     		
     		System.out.println("file " + fileNum);
@@ -250,7 +252,7 @@ public class DijkstraA {
     	} //end fixed e
 	
     	CSVList.writeDataAtOnce("AdjMatrix_FixedE_Results.csv", data);
-    	*/
+    	//*/
     	
     }
 }
