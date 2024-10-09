@@ -163,7 +163,7 @@ public class DijkstraA {
     		
     		System.out.println("file " + fileNum);
     		int graph[][] = new int[fixedV][fixedV];
-    		String fileName = "output" + Integer.toString(fileNum) + ".txt";
+    		String fileName = "Fixed V Graphs\\output" + Integer.toString(fileNum) + ".txt";
 	    	
 	    	//read generated graph from output.txt
 	    	try {

@@ -1,6 +1,9 @@
 package sc2001_project2_djikstra;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 public class DijkstraB {
 	static int INF = Integer.MAX_VALUE;
@@ -74,7 +77,7 @@ public class DijkstraB {
 	
 	public static void main(String[] args) {
 		// generateRandomGraph(Vertices, Edges, MaxWeight)
-		Graph_AdjList graph = Graph_AdjList.generateRandomGraph(100, 9900, 9900);
+		//Graph_AdjList graph = Graph_AdjList.generateRandomGraph(100, 9900, 9900);
 		
 		// Test case from DijkstraA
 		/*
@@ -104,17 +107,18 @@ public class DijkstraB {
 			}
 		}
 		*/
-		//Graph_AdjList graph = new Graph_AdjList(100); //V = 100;
 		
 		// Variables
 		int sampleSize = 90;
 		int stepSize = 100;
 		
+		/*
 		int startE = 1000; 	//fixed V
 		int fixedV = 100;
 		
 		int startV = 1000; 	//fixed E
 		int fixedE = 20000;	//Also used as maxWeight
+		
 		
 		DijkstraB dijB = new DijkstraB();
 		String[][] data = new String[sampleSize][];
@@ -127,7 +131,7 @@ public class DijkstraB {
 			String[] result = {String.valueOf(fixedV), String.valueOf(i), String.valueOf(dijB.getKeyComp()), String.valueOf(elapsedTime)};
 			data[(i/100)-10] = result;
 		}
-		CSVList.writeDataAtOnce("AdjList_FixedV_Results.csv", data);
+		//CSVList.writeDataAtOnce("AdjList_FixedV_Results.csv", data);
 		
 		data = new String[sampleSize][];
 		for (int i=startV; i<=(sampleSize-1)*stepSize; i+=stepSize) {
@@ -139,19 +143,112 @@ public class DijkstraB {
 			String[] result = {String.valueOf(i), String.valueOf(fixedE), String.valueOf(dijB.getKeyComp()), String.valueOf(elapsedTime)};
 			data[(i/100)-10] = result;
 		}
-		CSVList.writeDataAtOnce("AdjList_FixedE_Results.csv", data);
-		
-		/*
-		dijB.printSolution();
+		//CSVList.writeDataAtOnce("AdjList_FixedE_Results.csv", data);
 		*/
+
+		int e = 1000; 	//fixed V
+		int fixedV = 100;
 		
-		/*
-		String[][] data = new String[2][3];
-		String[] result = {"1", "2", String.valueOf(dijB.getKeyComp())};
-		data[0] = result;
-		data[1] = result;
-		CSV.writeDataAtOnce("test.csv", data);
-		*/
+		int v = 1000; 	//fixed E
+		int fixedE = 20000;
+		
+		Graph_AdjList graph = new Graph_AdjList(fixedV);
+		DijkstraB dijB = new DijkstraB();
+		String[][] data = new String[sampleSize][];
+		for(int fileNum = 1; fileNum<=90; fileNum++) { //fixed v
+    		
+    		System.out.println("file " + fileNum);
+    		int matrixGraph[][] = new int[fixedV][fixedV];
+    		String fileName = "Fixed V Graphs\\output" + Integer.toString(fileNum) + ".txt";
+	    	
+	    	//read generated graph from output.txt
+	    	try {
+	    	
+		    	File adjMatrices = new File(fileName);
+		    	Scanner myReader = new Scanner(adjMatrices);
+	    	
+		    	int i = 0;
+	    	
+		    	while (myReader.hasNextLine()) {
+		    		
+		    		String graphData = myReader.nextLine();
+		    		String row[] = graphData.split(",");
+		    		
+		    		for(int j=0; j<fixedV; j++) 
+		    			matrixGraph[i][j] = Integer.parseInt(row[j]);
+		    		
+		    		i++;
+	    	}
+	    	myReader.close();
+    	
+	    	} catch (FileNotFoundException err) {
+	    	 System.out.println("An error occurred.");
+	         err.printStackTrace();
+	    	}
+	        
+	    	graph = Graph_AdjList.matrixToList(matrixGraph);
+	        double startTime = System.nanoTime();	
+	        dijB.dijkstra(graph, 0);
+	        double endTime = System.nanoTime();
+	        double duration = (endTime - startTime);
+	   
+	        String result[] = {String.valueOf(fixedV), String.valueOf(e), String.valueOf(dijB.getKeyComp()), String.valueOf(duration/1000000)};
+	        data[(e/100)-10] = result;
+	        
+	        e += stepSize;
+	        System.out.println(fileNum + " done");
+	        
+    	} //end fixed v 
+		
+		//Uncomment to write to file
+		//CSVList.writeDataAtOnce("AdjList_FixedV_Results.csv", data);
+		
+		for(int fileNum = 1; fileNum<=90; fileNum++) { //fixed e
+    		
+    		System.out.println("file " + fileNum);
+			int matrixGraph[][] = new int[v][v];
+    		String fileName = "Fixed E graphs\\output" + Integer.toString(fileNum) + ".txt";
+	    	
+	    	//read generated graph from output.txt
+	    	try {
+	    	
+		    	File adjMatrices = new File(fileName);
+		    	Scanner myReader = new Scanner(adjMatrices);
+	    	
+		    	int i = 0;
+	    	
+		    	while (myReader.hasNextLine()) {
+		    		
+		    		String graphData = myReader.nextLine();
+		    		String row[] = graphData.split(",");
+		    		
+		    		for(int j=0; j<fixedV; j++) 
+		    			matrixGraph[i][j] = Integer.parseInt(row[j]);
+		    		
+		    		i++;
+	    	}
+	    	myReader.close();
+    	
+	    	} catch (FileNotFoundException err) {
+	    	 System.out.println("An error occurred.");
+	         err.printStackTrace();
+	    	}
+	    	
+	    	graph = Graph_AdjList.matrixToList(matrixGraph);
+	        double startTime = System.nanoTime();	
+	        dijB.dijkstra(graph, 0);
+	        double endTime = System.nanoTime();
+	        double duration = (endTime - startTime);
+	   
+	        String result[] = {String.valueOf(v), String.valueOf(fixedE), String.valueOf(dijB.getKeyComp()), String.valueOf(duration/1000000)};
+	        data[(v/100)-10] = result;
+	        
+	        v += stepSize;
+	        System.out.println(fileNum + " done");
+    	} //end fixed e
+		
+		// Uncomment to write to file
+		//CSVList.writeDataAtOnce("AdjList_FixedE_Results.csv", data);
 		
 	}
 
