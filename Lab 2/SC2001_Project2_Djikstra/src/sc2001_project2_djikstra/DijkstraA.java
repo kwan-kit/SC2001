@@ -46,8 +46,7 @@ public class DijkstraA {
         }
         
         while(lenQueue != 0) {
-        	int u = pQueue[0];                     // extract and delete vertex with the shortest distance from pQueue
-        	keyComp++;                             
+        	int u = pQueue[0];                     // extract and delete vertex with the shortest distance from pQueue                           
         	
         	deleteFirstElement(pQueue, lenQueue); 
         	set_S[u] = true;                       //add u to set S
@@ -57,7 +56,7 @@ public class DijkstraA {
         		
         		if (!set_S[v] && graph[u][v]!=0      //v is not in set S, and is connected to u
             		&& d[u] != Integer.MAX_VALUE     //and distance of u is found
-            		&& d[u] + graph[u][v] < d[v]) {    //and distance of u plus edge from u to v is less than current distance of v
+            		&& d[u] + graph[u][v] < d[v]) {  //and distance of u plus edge from u to v is less than current distance of v
     	
         			deleteElement(pQueue, v);
         			d[v] = d[u]+graph[u][v];         //Update distance of v
@@ -86,7 +85,7 @@ public class DijkstraA {
 		
 		for (int i=0; i<arr.length; i++) {
 			if(arr[i]==key) return i;
-			//keyComp++;
+			
 		} return -1;
 	}
 
@@ -105,7 +104,6 @@ public class DijkstraA {
 		int i;
 		for (i = pos; i < n-1; i++) {
 			arr[i] = arr[i + 1];
-			//keyComp++;
 		}
 		lenQueue--;
 		
@@ -117,7 +115,6 @@ public class DijkstraA {
     {
         for (int i = 0; i < n - 1; i++) {
             arr[i] = arr[i + 1];
-            //keyComp++;
         }
         lenQueue--;
     }
@@ -133,7 +130,6 @@ public class DijkstraA {
 		
 		for(i = lenQueue-1; (i>=0 && d[pQueue[i]]>d[vertex]); i--) {
 			pQueue[i+1] = pQueue[i];
-			//keyComp++;
 		} 
 		
 		pQueue[i+1] = vertex;
@@ -145,7 +141,7 @@ public class DijkstraA {
 	}
 	
 //---------------------------------------------------------------------------------------------------------------------------------//
-    public static void main(String[] args)
+	public static void main(String[] args)
     {
     	int sampleSize = 90;
     	int stepSize = 100;
@@ -160,12 +156,12 @@ public class DijkstraA {
     	DijkstraA t = new DijkstraA();
     	String[][] data = new String[sampleSize][];
     	
-    	/*
-    	for(int fileNum = 2; fileNum<=90; fileNum++) { //fixed v
+    	
+    	for(int fileNum = 1; fileNum<=90; fileNum++) { //fixed v
     		
     		System.out.println("file " + fileNum);
     		int graph[][] = new int[fixedV][fixedV];
-    		String fileName = "Fixed V Graphs\\output" + Integer.toString(fileNum) + ".txt";
+    		String fileName = "Fixed V Graphs/output" + Integer.toString(fileNum) + ".txt";
 	    	
 	    	//read generated graph from output.txt
 	    	try {
@@ -206,13 +202,13 @@ public class DijkstraA {
     	} //end fixed v 
     	
     	CSVList.writeDataAtOnce("AdjMatrix_FixedV_Results.csv", data);
-    	*/
-    		
+    	
+    	
 	for(int fileNum = 1; fileNum<=90; fileNum++) { //fixed e
     		
     		System.out.println("file " + fileNum);
 			int graph[][] = new int[v][v];
-    		String fileName = "output" + Integer.toString(fileNum) + ".txt";
+    		String fileName = "Fixed E Graphs/output" + Integer.toString(fileNum) + ".txt";
 	    	
 	    	//read generated graph from output.txt
 	    	try {
@@ -252,7 +248,7 @@ public class DijkstraA {
     	} //end fixed e
 	
     	CSVList.writeDataAtOnce("AdjMatrix_FixedE_Results.csv", data);
-    	//*/
+    	
     	
     }
 }
